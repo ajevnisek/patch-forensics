@@ -17,6 +17,7 @@ parser.add_argument('--source_dir_original', required=True, help='source videos 
 parser.add_argument('--outsize', type=int, default=128, help='resize to this size')
 parser.add_argument('--output_dir', required=True, help='output directory')
 parser.add_argument('--split', default='val.json', help='Path to split json file')
+parser.add_argument('--compression', default='c23', help='FF++ compression')
 
 args = parser.parse_args()
 rnd = np.random.RandomState(0)

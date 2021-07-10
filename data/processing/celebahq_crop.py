@@ -95,11 +95,13 @@ def celebahq_crop(im, landmarks=None):
     pad = (max(-pad[0] + border, 0), max(-pad[1] + border, 0), max(pad[2] - img.size[0] + border, 0), max(pad[3] - img.size[1] + border, 0))
     if max(pad) > border - 4:
         pad = np.maximum(pad, int(np.round(128 * 0.3 / zoom)))
-        img = np.pad(np.float32(img), ((pad[1], pad[3]), (pad[0], pad[2]), (0, 0)), 'reflect')
+        img = np.pad(np.array(img),
+                     ((pad[1], pad[3]), (pad[0], pad[2]), (0, 0)), 'reflect')
         h, w, _ = img.shape
         y, x, _ = np.mgrid[:h, :w, :1]
         mask = 1.0 - np.minimum(np.minimum(np.float32(x) / pad[0], np.float32(y) / pad[1]), np.minimum(np.float32(w-1-x) / pad[2], np.float32(h-1-y) / pad[3]))
         blur = 128 * 0.02 / zoom
+        img = np.float32(img)
         img += (scipy.ndimage.gaussian_filter(img, [blur, blur, 0]) - img) * np.clip(mask * 3.0 + 1.0, 0.0, 1.0)
         img += (np.median(img, axis=(0,1)) - img) * np.clip(mask, 0.0, 1.0)
         img = Image.fromarray(np.uint8(np.clip(np.round(img), 0, 255)), 'RGB')
